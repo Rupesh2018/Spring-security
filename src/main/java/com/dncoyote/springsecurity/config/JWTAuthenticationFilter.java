@@ -2,9 +2,16 @@ package com.dncoyote.springsecurity.config;
 
 import java.io.IOException;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.dncoyote.springsecurity.service.JWTService;
 import com.dncoyote.springsecurity.service.UserService;
 
 import jakarta.servlet.FilterChain;
@@ -17,9 +24,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JWtService jwtService;
+    private final JWTService jwtService;
     private final UserService userService;
-    private final TokenRepository tokenRepository;
+    // private final TokenRepository tokenRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -27,17 +34,17 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
-        if (StringUtils.isEmpty(authHeader) || !StringUtils.startsWith(authHeader,"Bearer ")) {
+        if (StringUtils.isEmpty(authHeader) || !StringUtils.startsWith(authHeader, "Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
         jwt = authHeader.substring(7);
-        userEmail = jwtService.extractUsername(jwt);
+        userEmail = jwtService.extractUserName(jwt);
         if (StringUtils.isNotEmpty(userEmail) && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userService.userDetailsService.loadUserByUsername(userEmail);
             // var isTokenValid = tokenRepository.findByToken(jwt)
-            //         .map(t -> !t.isExpired() && !t.isRevoked())
-            //         .orElse(false);
+            // .map(t -> !t.isExpired() && !t.isRevoked())
+            // .orElse(false);
             // if (jwtService.isTokenValid(jwt, userDetails) && isTokenValid)
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 // UsernamePasswordAuthenticationToken authToken = new
@@ -52,8 +59,8 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                         userDetails.getAuthorities());
                 authToken.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request));
-                        securityContext.setAuthentication(authToken);
-                        SecurityContextHolder.setContext(securityContext);
+                securityContext.setAuthentication(authToken);
+                SecurityContextHolder.setContext(securityContext);
             }
         }
         filterChain.doFilter(request, response);

@@ -1,7 +1,12 @@
 package com.dncoyote.springsecurity.service.impl;
 
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import com.dncoyote.springsecurity.repository.UserRepository;
+import com.dncoyote.springsecurity.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 

@@ -47,7 +47,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-leang</artifactId>
+			<artifactId>commons-lang3</artifactId>
 		</dependency>
 
 		<dependency>
