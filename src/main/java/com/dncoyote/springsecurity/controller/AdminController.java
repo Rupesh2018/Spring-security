@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dncoyote.springsecurity.dto.SignUpRequest;
-import com.dncoyote.springsecurity.entity.User;
 import com.dncoyote.springsecurity.service.AuthenticationService;
+import com.dncoyote.springsecurity.user.User;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,17 +28,17 @@ public class AdminController {
         return ResponseEntity.ok(service.signUp(signUpRequest));
     }
 
-    @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody AuthenticationRequest request) {
-        return ResponseEntity.ok(service.authenticate(request));
-    }
+    // @PostMapping("/authenticate")
+    // public ResponseEntity<AuthenticationResponse> authenticate(
+    //         @RequestBody AuthenticationRequest request) {
+    //     return ResponseEntity.ok(service.authenticate(request));
+    // }
 
-    @PostMapping("/refreshtoken")
-    public void refreshToken(
-            HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
-        service.refreshToken(request, response);
-    }
+    // @PostMapping("/refreshtoken")
+    // public void refreshToken(
+    //         HttpServletRequest request,
+    //         HttpServletResponse response) throws IOException {
+    //     service.refreshToken(request, response);
+    // }
 
 }
